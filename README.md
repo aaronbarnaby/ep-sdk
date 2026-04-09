@@ -30,7 +30,6 @@ bun run test
 bun run test-output
 bun run playground
 bun run playground:dist
-bun run release:dry-run
 ```
 
 ## Current API Surface
@@ -38,18 +37,18 @@ bun run release:dry-run
 The starter entrypoint preserves the legacy `gateway(...)` shape while using a TypeScript-native implementation.
 
 ```ts
-import { gateway } from '@aaronbarnaby/ep-sdk'
+import { gateway } from '@aaronbarnaby/ep-sdk';
 
 const client = gateway({
   client_id: process.env.EP_CLIENT_ID,
   client_secret: process.env.EP_CLIENT_SECRET,
   headers: {
-    'EP-Beta-Features': 'account-management'
-  }
-})
+    'EP-Beta-Features': 'account-management',
+  },
+});
 
-const products = await client.request.send('/products', 'GET')
-console.log(products)
+const products = await client.send('/products', 'GET');
+console.log(products);
 ```
 
 Supported foundation pieces today:
@@ -65,14 +64,6 @@ Supported foundation pieces today:
 
 The playground is a Bun CLI script intended for quick local verification outside the test suite.
 
-By default it runs in dry-run mode and only prints the resolved configuration:
-
-```bash
-bun run playground
-```
-
-To run a live request, create a local `.env` from `.env.example` and set `EP_RUN_LIVE=true`.
-
 ```bash
 bun run playground
 ```
@@ -82,9 +73,7 @@ Useful environment variables:
 - `EP_CLIENT_ID`
 - `EP_CLIENT_SECRET`
 - `EP_HOST`
-- `EP_API_PATH`
 - `EP_BETA_FEATURES`
-- `EP_RUN_LIVE`
 
 ## Build Output
 
