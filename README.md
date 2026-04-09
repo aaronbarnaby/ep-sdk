@@ -3,14 +3,16 @@
 [![npm version](https://img.shields.io/npm/v/@aaronbarnaby/ep-sdk.svg)](https://www.npmjs.com/package/@aaronbarnaby/ep-sdk)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-This repository is the planned TypeScript-first successor to the original [@elasticpath/js-sdk](https://github.com/elasticpath/js-sdk). The current focus is the core repository structure: Bun tooling, modern TypeScript builds, semantic-release publishing, bun:test coverage, and a local playground for manual verification.
+This repository is a personal TypeScript-first rewrite to the original [@elasticpath/js-sdk](https://github.com/elasticpath/js-sdk).
 
-The endpoint surface from the legacy SDK has not been ported yet. The scaffold in this repository establishes the gateway, request factory, auth flow, and packaging model that those endpoints will build on.
+> This repository is currently in process and dosn't cover all Elastic Path endpoints at this time.
+>
+> Use at your own risk.
 
 ## Requirements
 
 - Bun 1.3+
-- Node.js 20+
+- Node.js 22+
 
 ## Install
 
@@ -95,5 +97,3 @@ The build is handled by `tsup` and emits:
 ## Release
 
 Publishing is handled with semantic-release from `main` and publishes to npm as `@aaronbarnaby/ep-sdk`.
-
-Before enabling automated publishing in GitHub Actions, add an `NPM_TOKEN` repository secret.
