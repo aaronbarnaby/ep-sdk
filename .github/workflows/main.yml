@@ -60,7 +60,8 @@ jobs:
     needs: [check_duplicate_workflow]
     runs-on: ubuntu-22.04
     permissions:
-      contents: write
+      checks: write
+      pull-requests: write
     if: ${{ needs.check_duplicate_workflow.outputs.should_skip != 'true' }}
     steps:
       - name: Check out repository code
@@ -86,6 +87,8 @@ jobs:
     runs-on: ubuntu-22.04
     permissions:
       contents: write
+      checks: write
+      pull-requests: write
     if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
     env:
       NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
