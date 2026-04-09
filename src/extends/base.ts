@@ -57,14 +57,12 @@ export class BaseExtend<
   }
 
   All<TResponse = TPageResponse>(token?: string): Promise<TResponse> {
-    const { includes, sort, limit, offset, filter } = this;
-
     const response = this.request.send<TResponse>(
-      buildURL(this.endpoint, { includes, sort, limit, offset, filter }),
+      buildURL(this.endpoint, this.getParams()),
       'GET',
       { token },
     );
-    this.resetProps(this);
+    this.resetProps();
 
     return response;
   }
@@ -75,13 +73,19 @@ export class BaseExtend<
       'GET',
       { token },
     );
-    this.resetProps(this);
+    this.resetProps();
 
     return response;
   }
 
-  protected resetProps(instance: this) {
-    const inst = instance;
+  protected getParams() {
+    const { includes, sort, limit, offset, filter } = this;
+    return { includes, sort, limit, offset, filter };
+  }
+
+  protected resetProps() {
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
+    const inst = this;
     (['includes', 'sort', 'limit', 'offset', 'filter'] as (keyof this)[]).forEach(
       e => delete inst[e],
     );

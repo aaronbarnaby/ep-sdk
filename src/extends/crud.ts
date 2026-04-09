@@ -1,8 +1,6 @@
 import type { UrlFilterParams } from '../types';
 import { BaseExtend } from './base';
 
-type RequestBody = Record<string, unknown>;
-
 function endpointResourceType(endpoint: string): string {
   if (endpoint.endsWith('ies')) {
     return `${endpoint.slice(0, -3)}y`;
@@ -18,8 +16,8 @@ function endpointResourceType(endpoint: string): string {
 export class CRUDExtend<
   TItemResponse = unknown,
   TPageResponse = unknown,
-  TCreateBody extends RequestBody = RequestBody,
-  TUpdateBody extends RequestBody = Partial<TCreateBody>,
+  TCreateBody = unknown,
+  TUpdateBody = unknown,
   TFilter extends UrlFilterParams = UrlFilterParams,
   TSort extends string = string,
   TInclude extends string = string,
@@ -33,10 +31,10 @@ export class CRUDExtend<
       body: {
         ...body,
         type: endpointResourceType(this.endpoint),
-      } as RequestBody,
+      } as TBody,
       token,
     });
-    this.resetProps(this);
+    this.resetProps();
 
     return response;
   }
@@ -50,10 +48,10 @@ export class CRUDExtend<
       body: {
         ...body,
         type: endpointResourceType(this.endpoint),
-      } as RequestBody,
+      } as TBody,
       token,
     });
-    this.resetProps(this);
+    this.resetProps();
 
     return response;
   }
@@ -62,7 +60,7 @@ export class CRUDExtend<
     const response = this.request.send<TResponse>(`${this.endpoint}/${id}`, 'DELETE', {
       token,
     });
-    this.resetProps(this);
+    this.resetProps();
 
     return response;
   }

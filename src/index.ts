@@ -81,16 +81,6 @@ export type {
   StorageFactory,
 };
 
-export type {
-  CreateProductBody,
-  Product,
-  ProductBase,
-  ProductFilter,
-  ProductInclude,
-  ProductPage,
-  ProductResource,
-  ProductSort,
-  UpdateProductBody,
-} from './endpoints/products';
+export type * from './endpoints/products';
 
 export default ElasticPath;
