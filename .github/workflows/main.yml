@@ -12,7 +12,7 @@ permissions:
 jobs:
   # This job uses skip-duplicate-actions to skip one of the duplicate workflow runs when you push to a branch with an open PR.
   check_duplicate_workflow:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     outputs:
       should_skip: ${{ steps.skip_check.outputs.should_skip }}
     steps:
@@ -25,30 +25,41 @@ jobs:
 
   lint:
     needs: [check_duplicate_workflow]
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     if: ${{ needs.check_duplicate_workflow.outputs.should_skip != 'true' }}
     steps:
       - name: Check out repository code
         uses: actions/checkout@v6
-      - uses: oven-sh/setup-bun@v2
-      - name: Run lint
+      - name: 🟢 Node
+        uses: actions/setup-node@v1
+        with:
+          node-version: 22
+      - name: 🟣 Bun
+        uses: oven-sh/setup-bun@v2
+      - name: 🛠 Install
+        run: bun run install --frozen-lockfile
+      - name: 🧹 Lint and Typecheck
         run: |
-          bun install --frozen-lockfile
           bun run lint
           bun run typecheck
 
   build:
     needs: [check_duplicate_workflow]
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     if: ${{ needs.check_duplicate_workflow.outputs.should_skip != 'true' }}
     steps:
       - name: Check out repository code
         uses: actions/checkout@v6
-      - uses: oven-sh/setup-bun@v2
-      - name: Build bundles
-        run: |
-          bun install --frozen-lockfile
-          bun run build
+      - name: 🟢 Node
+        uses: actions/setup-node@v1
+        with:
+          node-version: 22
+      - name: 🟣 Bun
+        uses: oven-sh/setup-bun@v2
+      - name: 🛠 Install
+        run: bun run install --frozen-lockfile
+      - name: 🏗 Build
+        run: bun run build
       - name: Upload build artifacts
         uses: actions/upload-artifact@v6
         with:
@@ -58,7 +69,7 @@ jobs:
 
   test:
     needs: [check_duplicate_workflow]
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     permissions:
       checks: write
       pull-requests: write
@@ -66,11 +77,16 @@ jobs:
     steps:
       - name: Check out repository code
         uses: actions/checkout@v6
-      - uses: oven-sh/setup-bun@v2
-      - name: Run tests
-        run: |
-          bun install --frozen-lockfile
-          bun run test-output
+      - name: 🟢 Node
+        uses: actions/setup-node@v1
+        with:
+          node-version: 22
+      - name: 🟣 Bun
+        uses: oven-sh/setup-bun@v2
+      - name: 🛠 Install
+        run: bun run install --frozen-lockfile
+      - name: ✅ Test
+        run: bun run test-output
       - name: Upload test results
         uses: actions/upload-artifact@v6
         with:
@@ -84,7 +100,8 @@ jobs:
 
   release:
     needs: [lint, build, test]
-    runs-on: ubuntu-22.04
+    name: Publish 🚀
+    runs-on: ubuntu-latest
     permissions:
       contents: write
       checks: write
@@ -96,9 +113,15 @@ jobs:
     steps:
       - name: Check out repository code
         uses: actions/checkout@v6
-      - uses: oven-sh/setup-bun@v2
-      - name: Release, publish package
-        run: |
-          bun install --frozen-lockfile
-          bun run build
-          bunx semantic-release
+      - name: 🟢 Node
+        uses: actions/setup-node@v1
+        with:
+          node-version: 22
+      - name: 🟣 Bun
+        uses: oven-sh/setup-bun@v2
+      - name: 🛠 Install
+        run: bun run install --frozen-lockfile
+      - name: 🏗 Build
+        run: bun run build
+      - name: 🚀 Publish
+        run: bunx semantic-release
