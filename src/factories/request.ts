@@ -211,7 +211,8 @@ export class RequestFactory {
     requestedVersion = this.config.version,
   ): string {
     const normalizedPath = normalizePath(path);
-    const baseUrl = `${this.config.protocol}://${this.config.host}/${requestedVersion}/`;
+    const versionPrefix = requestedVersion ? `${requestedVersion}/` : '';
+    const baseUrl = `${this.config.protocol}://${this.config.host}/${versionPrefix}`;
     const url = new URL(normalizedPath, baseUrl);
 
     for (const [key, value] of Object.entries(query ?? {})) {

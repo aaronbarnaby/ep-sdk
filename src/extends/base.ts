@@ -78,6 +78,15 @@ export class BaseExtend<
     return response;
   }
 
+  Attributes<TResponse = unknown>(token?: string): Promise<TResponse> {
+    const response = this.request.send<TResponse>(`${this.endpoint}/attributes`, 'GET', {
+      token,
+    });
+    this.resetProps();
+
+    return response;
+  }
+
   protected getParams() {
     const { includes, sort, limit, offset, filter } = this;
     return { includes, sort, limit, offset, filter };

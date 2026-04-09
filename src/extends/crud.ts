@@ -1,16 +1,29 @@
-import type { UrlFilterParams } from '../types';
 import { BaseExtend } from './base';
+import type { HttpMethod, UrlFilterParams } from '../types';
 
 function endpointResourceType(endpoint: string): string {
-  if (endpoint.endsWith('ies')) {
-    return `${endpoint.slice(0, -3)}y`;
+  const resourceSegment = endpoint.split('/').filter(Boolean).at(-1) ?? endpoint;
+
+  if (resourceSegment.endsWith('ies')) {
+    return `${resourceSegment.slice(0, -3)}y`;
   }
 
-  if (endpoint.endsWith('s')) {
-    return endpoint.slice(0, -1);
+  if (resourceSegment.endsWith('s')) {
+    return resourceSegment.slice(0, -1);
   }
 
-  return endpoint;
+  return resourceSegment;
+}
+
+export function mergeTypeIntoBody<TBody>(body: TBody, resourceType: string): TBody {
+  if (body && typeof body === 'object' && !Array.isArray(body)) {
+    return {
+      ...(body as Record<string, unknown>),
+      type: resourceType,
+    } as TBody;
+  }
+
+  return body;
 }
 
 export class CRUDExtend<
@@ -23,15 +36,17 @@ export class CRUDExtend<
   TInclude extends string = string,
   TDeleteResponse = unknown,
 > extends BaseExtend<TItemResponse, TPageResponse, TFilter, TSort, TInclude> {
+  protected createMethod: HttpMethod = 'POST';
+  protected updateMethod: HttpMethod = 'POST';
+  protected injectResourceType = true;
+  protected resourceType?: string;
+
   Create<TResponse = TItemResponse, TBody extends TCreateBody = TCreateBody>(
     body: TBody,
     token?: string,
   ): Promise<TResponse> {
-    const response = this.request.send<TResponse>(this.endpoint, 'POST', {
-      body: {
-        ...body,
-        type: endpointResourceType(this.endpoint),
-      } as TBody,
+    const response = this.request.send<TResponse>(this.endpoint, this.createMethod, {
+      body: this.injectResourceType ? mergeTypeIntoBody(body, this.resolveResourceType()) : body,
       token,
     });
     this.resetProps();
@@ -44,11 +59,8 @@ export class CRUDExtend<
     body: TBody,
     token?: string,
   ): Promise<TResponse> {
-    const response = this.request.send<TResponse>(`${this.endpoint}/${id}`, 'POST', {
-      body: {
-        ...body,
-        type: endpointResourceType(this.endpoint),
-      } as TBody,
+    const response = this.request.send<TResponse>(`${this.endpoint}/${id}`, this.updateMethod, {
+      body: this.injectResourceType ? mergeTypeIntoBody(body, this.resolveResourceType()) : body,
       token,
     });
     this.resetProps();
@@ -63,5 +75,9 @@ export class CRUDExtend<
     this.resetProps();
 
     return response;
+  }
+
+  protected resolveResourceType(): string {
+    return this.resourceType ?? endpointResourceType(this.endpoint);
   }
 }

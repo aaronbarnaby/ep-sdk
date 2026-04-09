@@ -1,11 +1,19 @@
 import MemoryStorageFactory from './factories/memory-storage';
-import type { ElasticPathConfigOptions, ResolvedElasticPathConfig } from './types';
+import type {
+  ElasticPathConfigOptions,
+  ElasticPathRouteVersion,
+  ResolvedElasticPathConfig,
+} from './types';
 import { DEFAULT_CREDENTIALS_KEY } from './utils/constants';
 
 export const DEFAULT_HOST = 'euwest.api.elasticpath.com';
 export const DEFAULT_PROTOCOL = 'https';
 export const DEFAULT_VERSION = 'v2';
 export const DEFAULT_APPLICATION = 'ep-sdk';
+
+const buildBaseUrl = (protocol: string, host: string, version: ElasticPathRouteVersion): string => {
+  return version ? `${protocol}://${host}/${version}` : `${protocol}://${host}`;
+};
 
 const DEFAULT_RETRY_DELAY = 1_000;
 const DEFAULT_RETRY_JITTER = 500;
@@ -59,6 +67,6 @@ export const resolveConfig = (
       throttleInterval: options.throttleInterval ?? DEFAULT_THROTTLE_INTERVAL,
     },
     storeId: options.storeId ?? options.store_id,
-    baseUrl: `${protocol}://${host}/${version}`,
+    baseUrl: buildBaseUrl(protocol, host, version),
   };
 };

@@ -1,6 +1,7 @@
 export type HttpMethod = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
 export type ElasticPathProtocol = 'https' | 'http';
 export type ElasticPathVersion = 'v1' | 'v2' | 'pcm';
+export type ElasticPathRouteVersion = ElasticPathVersion | undefined;
 export type FetchImplementation = (
   input: string | URL | Request,
   init?: RequestInit,
@@ -34,7 +35,7 @@ export interface ElasticPathConfigOptions {
   language?: string;
   host?: string;
   protocol?: ElasticPathProtocol;
-  version?: ElasticPathVersion;
+  version?: ElasticPathRouteVersion;
   custom_fetch?: FetchImplementation;
   custom_authenticator?: CustomAuthenticator;
   fetch?: FetchImplementation;
@@ -62,7 +63,7 @@ export interface ResolvedElasticPathConfig {
   language: string | undefined;
   host: string;
   protocol: ElasticPathProtocol;
-  version: ElasticPathVersion;
+  version: ElasticPathRouteVersion;
   fetch: FetchImplementation;
   authenticator: CustomAuthenticator | undefined;
   storage: StorageFactory;
@@ -86,7 +87,7 @@ export interface RequestOptions {
   query?: Record<string, string | number | boolean | null | undefined>;
   token?: string;
   responseType?: 'json' | 'text' | 'response';
-  version?: ElasticPathVersion;
+  version?: ElasticPathRouteVersion;
   wrapBody?: boolean;
 }
 
