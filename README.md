@@ -27,9 +27,18 @@ bun run lint
 bun run typecheck
 bun run build
 bun run test
+bun run check
 bun run test-output
 bun run playground
 bun run playground:dist
+```
+
+`bun run check` runs the full pre-push verification sequence: build, lint, typecheck, and test.
+
+To enforce that locally before every push, install the tracked Git hooks once per clone:
+
+```bash
+bun run hooks:install
 ```
 
 ## Current API Surface

@@ -32,6 +32,8 @@
     "lint": "eslint src test playground/index.ts tsup.config.ts",
     "typecheck": "tsc --noEmit",
     "build": "bun run clean && tsup --config tsup.config.ts",
+    "check": "bun run build && bun run lint && bun run typecheck && bun run test",
+    "hooks:install": "git config core.hooksPath .githooks",
     "test": "bun test",
     "test:watch": "bun test --watch",
     "test-output": "bun run clean:test-results && bun --eval \"import { mkdirSync } from 'node:fs'; mkdirSync('test-results/bun', { recursive: true });\" && bun test --reporter=junit --reporter-outfile ./test-results/bun/junit.xml",
