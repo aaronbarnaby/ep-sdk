@@ -1,0 +1,11 @@
+node_modules
+localStorage/
+npm-debug.log
+.npmrc
+.idea/
+dist/
+test-results.xml
+.DS_Store
+.env
+.env.local
+test-results/

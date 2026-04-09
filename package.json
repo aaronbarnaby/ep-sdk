@@ -1,0 +1,88 @@
+{
+  "name": "@aaronbarnaby/ep-sdk",
+  "description": "TypeScript SDK for the Elastic Path Commerce Cloud API.",
+  "version": "0.0.0-semantic-release",
+  "type": "module",
+  "homepage": "https://github.com/aaronbarnaby/ep-sdk",
+  "author": "Aaron Barnaby <email@ajbarnaby.com>",
+  "license": "MIT",
+  "packageManager": "bun@1.3.1",
+  "engines": {
+    "node": ">=20.0.0",
+    "bun": ">=1.3.1"
+  },
+  "sideEffects": false,
+  "files": [
+    "dist/**"
+  ],
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs",
+      "default": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "clean": "bunx rimraf dist test-results",
+    "clean:test-results": "bunx rimraf test-results",
+    "lint": "eslint src test playground/index.ts tsup.config.ts",
+    "typecheck": "tsc --noEmit",
+    "build": "bun run clean && tsup --config tsup.config.ts",
+    "test": "bun test",
+    "test:watch": "bun test --watch",
+    "test-output": "bun run clean:test-results && bun --eval \"import { mkdirSync } from 'node:fs'; mkdirSync('test-results/bun', { recursive: true });\" && bun test --reporter=junit --reporter-outfile ./test-results/bun/junit.xml",
+    "playground": "bun run ./playground/index.ts",
+    "playground:dist": "bun run build && bun run ./playground/dist-smoke.ts",
+    "release": "semantic-release",
+    "release:dry-run": "semantic-release --dry-run"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/aaronbarnaby/ep-sdk.git"
+  },
+  "release": {
+    "branches": [
+      "main"
+    ],
+    "plugins": [
+      "@semantic-release/commit-analyzer",
+      "@semantic-release/release-notes-generator",
+      "@semantic-release/npm"
+    ]
+  },
+  "bugs": {
+    "url": "https://github.com/aaronbarnaby/ep-sdk/issues"
+  },
+  "keywords": [
+    "elastic-path",
+    "epcc",
+    "sdk",
+    "typescript",
+    "bun"
+  ],
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@semantic-release/commit-analyzer": "^13.0.1",
+    "@semantic-release/npm": "^13.1.5",
+    "@semantic-release/release-notes-generator": "^14.1.0",
+    "@types/node": "^25.5.2",
+    "bun-types": "^1.3.11",
+    "eslint": "^10.2.0",
+    "globals": "^17.4.0",
+    "prettier": "^3.8.1",
+    "rimraf": "^6.1.3",
+    "semantic-release": "^25.0.3",
+    "tsup": "^8.5.1",
+    "typescript": "^6.0.2",
+    "typescript-eslint": "^8.58.1"
+  },
+  "dependencies": {},
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  }
+}
